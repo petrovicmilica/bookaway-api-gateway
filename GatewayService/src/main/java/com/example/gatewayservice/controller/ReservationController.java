@@ -1,15 +1,15 @@
 package com.example.gatewayservice.controller;
 
+import com.example.gatewayservice.dto.ReservationDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.List;
 
 
 @RestController
@@ -42,6 +42,21 @@ public class ReservationController {
         ResponseEntity<?> response = restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.POST, HttpEntity.EMPTY, Object.class);
 
         return response;
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<ReservationDto>> getReservationsByUserId(@PathVariable Long userId) {
+        String url = relationalServiceUrl + "/reservations/user/" + userId;
+
+        ResponseEntity<ReservationDto[]> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                HttpEntity.EMPTY,
+                ReservationDto[].class
+        );
+
+        List<ReservationDto> reservations = List.of(response.getBody());
+        return ResponseEntity.ok(reservations);
     }
 
 }

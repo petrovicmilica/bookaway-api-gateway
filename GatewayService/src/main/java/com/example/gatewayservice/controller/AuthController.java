@@ -7,10 +7,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -29,6 +26,16 @@ public class AuthController {
     @Value("${spring.application.relational-service-url}")
     private String relationalServiceUrl;
 
+    @GetMapping("/tryLogin")
+    public String loginStudent() {
+        try {
+            return "uspesna autentifikacija!";
+        }
+        catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> loginData) {
         String url = relationalServiceUrl + "/auth/login";
@@ -46,17 +53,13 @@ public class AuthController {
                     new ParameterizedTypeReference<Map<String, String>>() {}
             );
 
-            // Simply pass along the response from the relational service
             return ResponseEntity.status(relationalResponse.getStatusCode()).body(relationalResponse.getBody());
 
         } catch (HttpClientErrorException e) {
-            // Extract and return the error message and status code from the relational service
             return ResponseEntity.status(e.getStatusCode()).body(Collections.singletonMap("error", e.getResponseBodyAsString()));
         } catch (HttpServerErrorException e) {
-            // Extract and return the error message and status code from the relational service
             return ResponseEntity.status(e.getStatusCode()).body(Collections.singletonMap("error", e.getResponseBodyAsString()));
         } catch (Exception e) {
-            // Handle other exceptions
             return ResponseEntity.status(500).body(Collections.singletonMap("error", "Login failed in relational database: " + e.getMessage()));
         }
     }
