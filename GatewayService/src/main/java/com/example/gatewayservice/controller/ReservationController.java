@@ -59,5 +59,11 @@ public class ReservationController {
         return ResponseEntity.ok(reservations);
     }
 
+    @GetMapping("/{id}")
+    public Object getById(@PathVariable Long id) {
+        String url = relationalServiceUrl + "/reservations/" + id;
+        return restTemplate.getForObject(url, Object.class);
+    }
+
 }
 

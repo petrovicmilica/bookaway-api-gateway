@@ -36,6 +36,13 @@ public class HotelController {
         return restTemplate.getForObject(url, Object.class);
     }
 
+    @GetMapping("/reservations/{id}")
+    public Object getHotelByReservationId(@PathVariable Long id) {
+        String url = relationalServiceUrl + "/hotels/reservations/" + id;
+        return restTemplate.getForObject(url, Object.class);
+    }
+
+
     @GetMapping("/search")
     public Object searchHotels(
             @RequestParam(required = false) String address,
