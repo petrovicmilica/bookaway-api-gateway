@@ -12,10 +12,19 @@ public class HotelController {
     @Value("${spring.application.relational-service-url}")
     private String relationalServiceUrl;
 
+    @Value("${spring.application.document-service-url}")
+    private String documentServiceUrl;
+
     private final RestTemplate restTemplate;
 
     public HotelController(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
+    }
+
+    @GetMapping("/facilities/{id}")
+    public Object getHotelFacilitiesById(@PathVariable Long id) {
+        String url = documentServiceUrl + "/hotel-facilities/hotel/" + id;
+        return restTemplate.getForObject(url, Object.class);
     }
 
     @GetMapping

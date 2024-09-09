@@ -28,7 +28,7 @@ public class UserController {
 
     @GetMapping("/findById/{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable String id) {
-        String url = relationalServiceUrl + "/users/find/" + id;
+        String url = relationalServiceUrl + "/users/findById/" + id;
         ResponseEntity<UserDto> response = restTemplate.getForEntity(url, UserDto.class);
         return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
     }

@@ -25,11 +25,12 @@ public class ReservationController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createReservation(
+    public ResponseEntity<ReservationDto> createReservation(
             @RequestParam Long roomId,
             @RequestParam String startDate,
             @RequestParam String endDate,
-            @RequestParam int guestCount) {
+            @RequestParam int guestCount,
+            @RequestParam Long userId) {
 
         String url = relationalServiceUrl + "/reservations/create";
 
@@ -37,12 +38,20 @@ public class ReservationController {
                 .queryParam("roomId", roomId)
                 .queryParam("startDate", startDate)
                 .queryParam("endDate", endDate)
-                .queryParam("guestCount", guestCount);
+                .queryParam("guestCount", guestCount)
+                .queryParam("userId", userId);
 
-        ResponseEntity<?> response = restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.POST, HttpEntity.EMPTY, Object.class);
+        // Očekuj da API vrati kreiranu rezervaciju kao ReservationDto
+        ResponseEntity<ReservationDto> response = restTemplate.exchange(
+                uriBuilder.toUriString(),
+                HttpMethod.POST,
+                HttpEntity.EMPTY,
+                ReservationDto.class
+        );
 
         return response;
     }
+
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<ReservationDto>> getReservationsByUserId(@PathVariable Long userId) {
