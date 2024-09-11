@@ -5,11 +5,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/documents")
@@ -38,7 +40,7 @@ public class DocumentController {
         return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
     }
 
-    @PostMapping("/sendDocument")
+   /* @PostMapping("/sendDocument")
     public ResponseEntity<String> sendDocument(@RequestParam String email, @RequestParam String documentId) {
         String url = documentServiceUrl + "/documents/sendDocument";
 
@@ -47,6 +49,20 @@ public class DocumentController {
         requestBody.put("documentId", documentId);
 
         return restTemplate.postForEntity(url, requestBody, String.class);
+    }*/
+
+    @Async
+    @PostMapping("/sendDocument")
+    public CompletableFuture<ResponseEntity<String>> sendDocument(@RequestParam String email, @RequestParam String documentId) {
+        return CompletableFuture.supplyAsync(() -> {
+            String url = documentServiceUrl + "/documents/sendDocument";
+            Map<String, Object> requestBody = new HashMap<>();
+            requestBody.put("email", email);
+            requestBody.put("documentId", documentId);
+
+            ResponseEntity<String> response = restTemplate.postForEntity(url, requestBody, String.class);
+            return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
+        });
     }
 
 }

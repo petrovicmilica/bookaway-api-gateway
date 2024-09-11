@@ -51,4 +51,22 @@ public class ReviewController {
 
         return ResponseEntity.status(responseEntity.getStatusCode()).body(responseEntity.getBody());
     }
+
+    @PutMapping("/{reviewId}/{status}")
+    public ResponseEntity<Object> updateReviewStatus(@PathVariable String reviewId, @PathVariable String status) {
+        String updateReviewUrl = documentServiceUrl + "/reviews/" + reviewId + "/" + status;
+
+        HttpHeaders headers = new HttpHeaders();
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<Object> responseEntity = restTemplate.exchange(
+                updateReviewUrl,
+                HttpMethod.PUT,
+                requestEntity,
+                Object.class
+        );
+
+        return ResponseEntity.status(responseEntity.getStatusCode()).body(responseEntity.getBody());
+    }
+
 }

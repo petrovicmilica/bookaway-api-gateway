@@ -17,6 +17,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.List;
 
+@SuppressWarnings("ALL")
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -28,8 +29,8 @@ public class SecurityConfig {
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
-        //provider.setPasswordEncoder(new BCryptPasswordEncoder()); //KASNIJE OVO KAD ENKRIPTUJEM PASSWORDS
-        provider.setPasswordEncoder(NoOpPasswordEncoder.getInstance()); // Koristite NoOpPasswordEncoder
+        provider.setPasswordEncoder(new BCryptPasswordEncoder()); //KASNIJE OVO KAD ENKRIPTUJEM PASSWORDS
+        //provider.setPasswordEncoder(NoOpPasswordEncoder.getInstance()); // Koristite NoOpPasswordEncoder
         return provider;
     }
 
