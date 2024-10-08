@@ -19,7 +19,8 @@ To set up the project locally, follow these steps:
 1. Clone the repository.
 2. Set up the backend using Java and Spring Boot.
 3. Configure the PostgreSQL database using pgAdmin.
-4. Run the microservice.
+4. Configure the MongoDB database using MongoDB Compass.
+5. Run all microservices, including this.
 
 ## Author
 
